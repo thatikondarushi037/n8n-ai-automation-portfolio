@@ -1,0 +1,186 @@
+{
+  "name": "AI lead Automation - Lead Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-intake",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -192,
+        32
+      ],
+      "id": "4ee2363d-f3a4-48af-ab13-6ed015937b57",
+      "name": "Webhook",
+      "webhookId": "29b12b36-e4cf-402e-875c-8227d11f3506"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ce17ba1e-5a96-461b-84b3-f0910ee15658",
+              "name": "name",
+              "value": "={{ $json.body.name.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "2ad99726-5a38-4dcf-9aaf-4ae3a9b04967",
+              "name": "email",
+              "value": "={{ $json.body.email.toLowerCase().trim()}}",
+              "type": "string"
+            },
+            {
+              "id": "bd9e367d-3e8a-438f-8daf-df0273c80eb8",
+              "name": "company",
+              "value": "={{ $json.body.company }}",
+              "type": "string"
+            },
+            {
+              "id": "98712dbc-782c-438c-bd10-0aa7d496d901",
+              "name": "budget",
+              "value": "={{ Number($json.body.budget) }}",
+              "type": "number"
+            },
+            {
+              "id": "cb7b6a5e-0966-4fef-b46f-5a92c690c915",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "e14623b3-80af-442c-9608-2bba91eeba2b",
+              "name": "source",
+              "value": "website",
+              "type": "string"
+            },
+            {
+              "id": "7a37c8bc-bf7d-493b-956d-4b9b3ccd1137",
+              "name": "receivedAt",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "9e30ad2e-cdb1-4548-8be1-4a016f5f3adc",
+              "name": "employees",
+              "value": "={{ $json.body.employees }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1d2ac72b-1719-4034-aa9d-3006041dd51f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6d088cfa-c5e5-4efc-acb4-c6f041bcb8ec",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "33bd3eed-5895-446e-94e1-f7a3ab7ceb06",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b5ece764-0823-4517-8e12-50a05f0e9e86",
+              "leftValue": "={{ $json.budget }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "ea08104a-da90-4ab3-bb56-7f96f45d2fa5",
+              "leftValue": "={{ $json.employees }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "8ebf8b6f-8efc-403e-80ec-3bb287eb5c75",
+      "name": "validate lead"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "validate lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "05edc4b2-7751-4e41-80f5-b6058bd7f218",
+  "meta": {
+    "instanceId": "c93089101dfd918b34617501959f7af5a23b56ab974fcc9c0e9807031cf5eddc"
+  },
+  "nodeGroups": [],
+  "id": "5vYsyZIbCPn7jACD",
+  "tags": []
+}
